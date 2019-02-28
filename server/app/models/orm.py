@@ -6,8 +6,10 @@ import json
 import math
 from bson.objectid import ObjectId
 
-myclient = pymongo.MongoClient('localhost', 27017)
-db = myclient["python_blog"]
+from config import mongodb
+
+myclient = pymongo.MongoClient(mongodb['host'], mongodb['port'])
+db = myclient[mongodb['name']]
 
 
 class ObjectIdEncoder(json.JSONEncoder):

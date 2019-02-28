@@ -7,7 +7,7 @@ from . import routes
 from ..models.users import Users
 import json
 # import jwt
-from ..my_redis import redis_db0
+from ..redis_init import client
 # 导入生成 csrf_token 值的函数
 from flask_wtf.csrf import generate_csrf
 from ..utils import mark_success, mark_fail
@@ -31,27 +31,27 @@ def user_login():
     # 调用函数生成 csrf_token
     csrf_token = generate_csrf(secret_key=username)
 
-    print(redis_db0.keys())
+    print(client.keys())
 
-    # for item in redis_db0.keys():
-    #     current = redis_db0.get(item)
-    #     currentUser = redis_db0.get(current)
-    #     # current = json.loads(redis_db0.get(str(item)))
+    # for item in client.keys():
+    #     current = client.get(item)
+    #     currentUser = client.get(current)
+    #     # current = json.loads(client.get(str(item)))
     #     if current['username'] == user['username']:
-    #         redis_db0.delete(item)
+    #         client.delete(item)
 
     user_csrf_token_key = username + '_csrf_token'
 
-    redis_db0.set(csrf_token, json.dumps(user), 7200)
-    redis_db0.set(user_csrf_token_key, csrf_token, 7200)
+    client.set(csrf_token, json.dumps(user), 7200)
+    client.set(user_csrf_token_key, csrf_token, 7200)
 
-    # redis_db0.set(csrf_token, json.dumps(user))
-    # if redis_db0.get(user_csrf_token_key):
-    #    redis_db0.delete(user_csrf_token_key)
+    # client.set(csrf_token, json.dumps(user))
+    # if client.get(user_csrf_token_key):
+    #    client.delete(user_csrf_token_key)
 
     user['csrf_token'] = csrf_token
-    # redis_db0.set(csrf_token, json.dumps(user))
-    # redis_db0.expire(csrf_token, 100)
+    # client.set(csrf_token, json.dumps(user))
+    # client.expire(csrf_token, 100)
 
     # 为用户设置cookie值为csrf_token 防止csrf攻击
     resp = make_response()

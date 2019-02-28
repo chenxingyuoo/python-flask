@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="/user/update" method="post">
+    <input name="id" type="hidden" value="{{ user_info._id }}">
+    <p><input name="username" placeholder="Username" value="{{ user_info.username }}"></p>
+    <p><input name="password" placeholder="Password" type="password" value="{{ user_info.password }}"></p>
+    <p><button type="submit">update</button></p>
+</form>
+</body>
+</html>

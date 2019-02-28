@@ -1,0 +1,50 @@
+{% extends "base.html" %}       # 继承base.html文件
+
+{% block title %} Test {% endblock %}   # 定制title部分的内容
+
+{% block head %}
+    <style type='text/css'>
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    {#  头部  #}
+    {% include 'layout/NavBar.html' %}
+
+    <a class="btn btn-primary" href="/user/create" role="button">注册</a>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">用户名</th>
+          <th scope="col">密码</th>
+          <th scope="col">操作</th>
+          <th scope="col">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for item in data.list %}
+            <tr>
+                <td>
+                    <a href="/user/info/{{ item._id }}">{{ item.username }}</a>
+                </td>
+                <td>{{ item.password }}</td>
+                <td>
+                    <a href="/user/update/{{ item._id }}">编辑</a>
+                </td>
+                <td>
+                    <a href="/user/delete/{{ item._id }}">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+    {#  分页  #}
+    {% import 'components/Pagination.html' as Pagination %}
+    {{ Pagination.create(data.currentPage, data.totalPage) }}
+
+{% endblock %}

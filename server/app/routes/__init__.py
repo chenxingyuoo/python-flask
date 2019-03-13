@@ -13,15 +13,18 @@ routes = Blueprint('routes', __name__)
 
 from . import user
 
+notAuthPaths = [
+    '/',
+    '/user/login'
+]
 
 @routes.before_request
 def before_request():
-
-    if request.path != '/api/user/login' and request.path != '/':
-
+    isPath = request.path in notAuthPaths
+    if isPath is False:
         current_csrf_token = request.cookies.get('csrf_token', '')
         user = client.get(current_csrf_token)
-        if  user is None:
+        if user is None:
             return mark_not_login(msg='token无效')
         user = json.loads(user)
         username = user['username']

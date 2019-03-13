@@ -89,7 +89,10 @@ checkBrowsers(paths.appPath, isInteractive)
     const serverConfig = createDevServerConfig(
         {
           '/api': {
-            target: "http://localhost:5000"
+            target: "http://localhost:5000",
+            pathRewrite: {
+              '/api' : ''
+            }
           }
         },
       urls.lanUrlForConfig

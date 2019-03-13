@@ -10,7 +10,7 @@ const notAuthCode = 1000
 
 // 创建axios实例
 const service = axios.create({
-  timeout: 10000 // 请求超时时间
+  baseURL: process.env.NODE_ENV === 'development' ? '/api' : ''
 })
 
 

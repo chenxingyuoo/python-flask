@@ -8,11 +8,8 @@ from bson.objectid import ObjectId
 
 from config import mongodb
 
-print('mongodb', mongodb)
-
 myclient = pymongo.MongoClient(host=mongodb['host'], port=mongodb['port'], connect=False)
 db = myclient[mongodb['name']]
-
 
 class ObjectIdEncoder(json.JSONEncoder):
     def default(self, o):
@@ -33,11 +30,19 @@ class Model(dict):
         return self.collection.find()
 
     def find_all(self, **kw):
-        currentPage = kw.get('currentPage', None)
-        pageSize = kw.get('pageSize', None)
+        currentPage = kw.get('currentPage', 1)
+        pageSize = kw.get('pageSize', 10)
         orderBy = kw.get('orderBy', None)
-        data = self.collection.find()
+        orderType = kw.get('orderType', pymongo.ASCENDING)
+        where = kw.get('where', None)
+
+        data = self.collection.find(where)
+
+        if orderBy is not None:
+            data.sort(orderBy, orderType)
+
         total = data.count()
+
         if currentPage is not None and pageSize is not None:
             skip = (currentPage - 1) * pageSize
             data.skip(skip).limit(pageSize)
@@ -45,19 +50,15 @@ class Model(dict):
         result = dict(list=list(data),total=total, currentPage=currentPage, pageSize=pageSize, totalPage=math.ceil(total/pageSize))
         return json.loads(ObjectIdEncoder().encode(result))
 
-
-    # def find_all_to_json(self, **kw):
-    #     data = self.find_all(**kw)
-    #     return json.loads(ObjectIdEncoder().encode(data))
-
     def find_one(self, id):
-        return self.collection.find_one({'_id': ObjectId(id)})
+        user = self.collection.find_one({'_id': ObjectId(id)})
+        if user is not None:
+            return json.loads(ObjectIdEncoder().encode(user))
 
     def find_one_by_where(self, where):
         user = self.collection.find_one(where)
-        if user is None:
-            return None
-        return json.loads(ObjectIdEncoder().encode(user))
+        if user is not None:
+            return json.loads(ObjectIdEncoder().encode(user))
 
     def insert_one(self, data):
         self.collection.insert_one(data)
@@ -71,11 +72,6 @@ class Model(dict):
 
     def find_one_and_update(self, id, data):
         self.collection.find_one_and_update({'_id': ObjectId(id)}, {'$set': data})
-        return JSONEncoder().encode({
-            'data': None,
-            'message': '删除成功zz',
-            'code': 200
-        })
 
     def find_one_and_delete(self, id):
         self.collection.find_one_and_delete({'_id': ObjectId(id)})

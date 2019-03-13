@@ -5,6 +5,7 @@ import {
 } from 'antd';
 import request from '../../js/utils/request';
 import cookie from '../../js/utils/cookie';
+import {login, fetchUserInfo} from '../../api/user'
 import './login.css'
 
 class NormalLoginForm extends React.Component {
@@ -14,12 +15,11 @@ class NormalLoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        request.post({
-          url: '/api/user/login',
-          data: values
-        }).then((res) => {
+        login(values).then((res) => {
           // cookie.set('token', res.data)
-          this.props.history.push('/user/list')
+          fetchUserInfo().then(() => {
+            this.props.history.push('/user/list')
+          })
         })
       }
     });

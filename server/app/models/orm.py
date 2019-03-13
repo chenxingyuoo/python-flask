@@ -8,7 +8,9 @@ from bson.objectid import ObjectId
 
 from config import mongodb
 
-myclient = pymongo.MongoClient(mongodb['host'], mongodb['port'])
+print('mongodb', mongodb)
+
+myclient = pymongo.MongoClient(host=mongodb['host'], port=mongodb['port'], connect=False)
 db = myclient[mongodb['name']]
 
 
@@ -52,7 +54,10 @@ class Model(dict):
         return self.collection.find_one({'_id': ObjectId(id)})
 
     def find_one_by_where(self, where):
-        return json.loads(ObjectIdEncoder().encode(self.collection.find_one(where)))
+        user = self.collection.find_one(where)
+        if user is None:
+            return None
+        return json.loads(ObjectIdEncoder().encode(user))
 
     def insert_one(self, data):
         self.collection.insert_one(data)

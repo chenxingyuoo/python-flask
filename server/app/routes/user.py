@@ -4,7 +4,7 @@
 from flask import render_template, request, redirect, make_response
 # 导入蓝本 main
 from . import routes
-from ..models.users import Users
+from ..models import Users
 import json
 # import jwt
 from ..redis_init import client
@@ -13,6 +13,21 @@ from flask_wtf.csrf import generate_csrf
 from ..utils import mark_success, mark_fail
 
 users = Users()
+
+@routes.route('/', methods=['GET'])
+def index():
+    # global encoded
+
+    # currentPage = int(request.args.get('currentPage', 1))
+    # pageSize = int(request.args.get('pageSize', 2))
+    # users_data = users.find_all(currentPage=currentPage, pageSize=pageSize)
+
+    # resp = make_response()
+    # resp.headers['Content-Type'] = 'application/json'
+    # resp.response = users_data
+    # return resp
+    return render_template('index.html')
+    # return 'hello'
 
 
 @routes.route('/api/user/login', methods=['POST'])
@@ -62,21 +77,6 @@ def user_login():
         'message': '登录成功'
     })
     return resp
-
-
-@routes.route('/', methods=['GET'])
-def index():
-    global encoded
-
-    currentPage = int(request.args.get('currentPage', 1))
-    pageSize = int(request.args.get('pageSize', 2))
-    users_data = users.find_all(currentPage=currentPage, pageSize=pageSize)
-
-    # resp = make_response()
-    # resp.headers['Content-Type'] = 'application/json'
-    # resp.response = users_data
-    # return resp
-    return render_template('index.html')
 
 
 @routes.route('/api/user/list', methods=['GET'])

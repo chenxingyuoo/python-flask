@@ -4,7 +4,9 @@
 from flask import Flask, request
 # from . import models
 from .routes import routes as routes_blueprint
-from .models import orm
+# from .models import orm
+
+
 
 def create_app():
     # orm.connection(host='127.0.0.1', port=3306)

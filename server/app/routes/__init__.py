@@ -15,7 +15,8 @@ from . import user
 
 notAuthPaths = [
     '/',
-    '/user/login'
+    '/user/login',
+    '/user/registered'
 ]
 
 @routes.before_request

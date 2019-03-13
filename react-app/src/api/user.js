@@ -9,6 +9,13 @@ export const login = (data = {}) => {
   })
 }
 
+export const registered = (data = {}) => {
+  return request.post({
+    url: '/user/registered',
+    data: data
+  })
+}
+
 export const saveUser = (data = {}) => {
   return request.post({
     url: '/user/save',

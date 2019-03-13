@@ -28,6 +28,21 @@ def user_info():
     except Exception as e:
         return mark_fail(msg=e.args[0])
 
+@routes.route('/user/registered', methods=['POST'])
+def user_registered():
+    username = request.json['username'] or ''
+    password = request.json['password'] or ''
+
+    try:
+        user = users.find_one_by_where({'username': username})
+        if user is not None:
+            return mark_fail(msg='用户已存在')
+
+        users.insert_one({'username': username, 'password': password})
+        return mark_success()
+    except Exception as e:
+        return mark_fail(msg=e.args[0])
+
 @routes.route('/user/login', methods=['POST'])
 def user_login():
     username = request.json['username'] or ''
@@ -45,7 +60,7 @@ def user_login():
         # 调用函数生成 csrf_token
         csrf_token = generate_csrf(secret_key=username)
 
-        print(client.keys())
+        # print(client.keys())
 
         user_csrf_token_key = username + '_csrf_token'
 

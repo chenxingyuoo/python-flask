@@ -3,7 +3,7 @@ import React from 'react'
 import {
   Form, Icon, Input, Button, Checkbox,
 } from 'antd';
-import {login, fetchUserInfo} from '../../api/user'
+import {registered} from '../../api/user'
 import './login.css'
 
 class NormalLoginForm extends React.Component {
@@ -13,10 +13,8 @@ class NormalLoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        login(values).then((res) => {
-          fetchUserInfo().then(() => {
-            this.props.history.push('/user/list')
-          })
+        registered(values).then((res) => {
+          this.props.history.push('/login')
         })
       }
     });
@@ -42,10 +40,10 @@ class NormalLoginForm extends React.Component {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Log in
+              Registered
             </Button>
             <div>
-              <a href="#/registered">register now!</a>
+              <a href="#/login">login now!</a>
             </div>
           </Form.Item>
         </Form>
